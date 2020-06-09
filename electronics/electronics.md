@@ -1,8 +1,8 @@
 ## Good resources
 - https://www.tutorialspoint.com/basic_electronics/basic_electronics_materials.htm: Useful theory at the start.
 - Sparkfun tutorials
-- https://www.youtube.com/watch?v=t5phi3nT8OU
-- https://www.youtube.com/watch?v=14_jh3nLSsU
+- [KiCad STM32 Hardware Design and JLCPCB Assembly](https://www.youtube.com/watch?v=t5phi3nT8OU)
+- [KiCad STM32 + RF + USB Hardware Design](https://www.youtube.com/watch?v=14_jh3nLSsU)
 
 ## Power circuit
 
@@ -37,7 +37,7 @@ The hole can be considered a unit of positive charge.
 When a potential is applied, electrons move towards the positive part. But the holes "move" towards the negative part. Electrons fill the holes closer to the positive part. Called *hole current*.
 
 ## Semiconductors
-- Resistivity less than insulators, greater than conductors.
+- Resistivity is less than insulators, greater than conductors.
 - Resistance increases with temperature decrease.
 
 *Intrinsic* semiconductors have low conduction capacity. We add impurities (doping) to turn them into *extrinsic* semiconductors.
@@ -110,7 +110,8 @@ FETs come as Junction Field Effect Transistors (JFET) or Metal Oxide FETs (MOSFE
 
 N-Channel JFET's have a greater channel conductivity (lower resistance) since electrons have a higher mobility through a conductor than holes do. This makes N-Channel JFET's a more efficient conductor compared to the P-Channel JFETs.
 
-The gate terminal is of the opposite type of material than the drain and source terminals. This creates a PN-junction with the channel. Note that *through* the channel there are no junctions, but to the side of it, there is one.
+The gate terminal is of the opposite type of material than the drain and source terminals. This creates a PN-junction with the channel. 
+Note that *through* the channel there are no junctions, but there is one on its side.
 
 ![JFET details](transistor-tran17.gif "JFET details")
 
@@ -124,6 +125,7 @@ In an N-channel JFET, if the gate voltage is 0, the PN-junction is very narrow. 
 
 
 ## MOSFETS
+Is a more advanced FET. The gate is insulated from the channel.
 
 Depletion mode: current can flow between Drain and Source when no voltage is applied. A negative voltage stops the flow.
 
@@ -251,3 +253,14 @@ Say it has three inputs and eight outputs. The 8 possible combinations of inputs
 ### Schotky diode
 - Can leak current in the wrong direction
 ### P-Channel MOSFET
+
+
+## Wiring
+### Enameled wire
+Enameled copper wire (aka magent wire) has a very thin layer of insulation. 
+The insulation burns off when soldering.
+Not having to deal with stripping the insulation speeds up wiring.
+[Example.](https://www.reddit.com/r/MechanicalKeyboards/comments/absurp/psa_hand_wiring_tip_you_can_use_thin_enameled/)
+
+### Rigid wiring
+[Looks pretty neat](https://geekhack.org/index.php?topic=95382.0). Jewelry wire is widely available. 
