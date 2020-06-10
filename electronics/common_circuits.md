@@ -32,3 +32,34 @@ When wiring in a keyboard circuit, treat it like a normal switch but have two ex
 
 ## Display ILI9341 with touchscreen
 https://www.youtube.com/watch?time_continue=33&v=beyDkTBhpgs&feature=emb_title
+
+# Microcontrollers
+
+## USB input
+- GND and connector go to GND
+- Data lines have a 22 ohm resistor in series
+- USBVCC goes to separate circuit
+
+## Power switching and regularisation
+For the nrfMicro:
+
+![](power_filtering_nrfmicro.PNG)
+
+- USBVCC is connected to the gate of a P-MOSFET. This prevents current flowing from the battery from pins 3 to 2 of the MOSFET when the USB is plugged in. 
+- There is a pull up resistor, R1, connected to pin 3 of the linear regulator. Is this needed to stop large currents flowing into EN? Pin 3 needs to be high for the regulator to work.
+- Two [decoupling capacitors](https://www.youtube.com/watch?v=BpuCv4hfYZU) are used to filter noise from the input (USB or battery). 
+- The Schottky diode D1 provides reverse polarity protection.
+- Why is R3 there?
+- P0.04 and P0.26 are connected to the output of the battery with a series resistor. Why is this resistor here?
+
+## LiPo Charging
+In the nrfMicro:
+
+![](nrfmicro_lipo_charging.png)
+
+- This is what is provided in the datasheet for the MCP73831.
+- The capacitor present in the datasheet is found in the power filtering circuit
+
+## Power switching with external ground
+I think some power hungry components like LEDs can be turned off by toggling pin 1.09. This makes there be no voltage between VCC and EXT_GND. Why would you want to short solder jump S8? connects EXT_GND to VCC permanently?
+
