@@ -8,3 +8,4 @@ Also general electronics resources.
 - [Protocols](electronics/protocols.md)
 - [Other keyboards](other_builds/other_builds.md)
 - [Other controllers](other_builds/other_controllers.md)
+- [Layouts](other_builds/other_layouts.md)

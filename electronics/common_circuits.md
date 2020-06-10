@@ -16,7 +16,19 @@ Calculating the resistor value: $R = \frac{V_{source}-V_{LED}}{I_{LED}}$.
 
 [Read more](https://www.brainy-bits.com/arduino-joystick-tutorial/)
 
-## Rotary encoder
+## Rotary encoders
 The encoder generates two offset square wave outputs. Measuring both of them can tell us the direction and speed we are rotating.
 
 Encoders rotate around continuously but potentiometers only rotate one revolution.
+
+[Read more](https://www.electroschematics.com/rotary-encoder-arduino/)
+
+When wiring in a keyboard circuit, treat it like a normal switch but have two extra pins:
+![](rotary_encoder_keyboard.png)
+
+[Using multiple encoders in a keyboard:](https://www.youtube.com/watch?v=DyHxccSvsPs) The two pins on every encoder for the two square wave outputs (A and B) are wired to the same two pins on the controller. So we only need to use two pins on the controller for any number of encoders. The C lines are wired through a diode to the rows. A matrix scan can then measure the values for each individual encoder.
+
+![](multiple_rotary_encoders.png)
+
+## Display ILI9341 with touchscreen
+https://www.youtube.com/watch?time_continue=33&v=beyDkTBhpgs&feature=emb_title
