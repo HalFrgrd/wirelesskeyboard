@@ -9,6 +9,7 @@ Can I use p026 for something else if p04 does the job?
 Can I provide pins for: 
 - P1.04: yes
 - P1.02: DFU, (normal in nrf52840 data sheet)
+- P1.00 datasheet says gpio but you say swd
 - P0.22: yes
 - P0.07 (boot): ASK JORIC what BOOT is.
 - p0.12, yes:
@@ -37,6 +38,10 @@ Can I provide pins for:
 - Opensource
 - Wireless; bluetooth
 - Pro micro clone (slightly longer)
+
+
+### [Sparkfun Artemis]
+https://learn.sparkfun.com/tutorials/designing-with-the-sparkfun-artemis
 
 
 

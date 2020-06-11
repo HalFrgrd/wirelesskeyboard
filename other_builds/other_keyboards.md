@@ -205,8 +205,10 @@
 
 [Analog touch to any keyboard](https://hackaday.com/2018/09/26/adding-analog-touch-to-nearly-any-mechanical-keyboard/)
 
-[Threaded heat inserts](https://hackaday.com/2019/02/28/threading-3d-printed-parts-how-to-use-heat-set-inserts/)
 
 [Dactyl generator](http://dactyl.siskam.link/example)
 
 [Keebfol.io miscellaneous](https://keebfol.io/miscellaneous/)
+
+## PCBs
+[6pack macro board](https://github.com/kdewilde/6pack)

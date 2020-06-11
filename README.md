@@ -9,3 +9,4 @@ Also general electronics resources.
 - [Other keyboards](other_builds/other_builds.md)
 - [Other controllers](other_builds/other_controllers.md)
 - [Layouts](other_builds/other_layouts.md)
+- [Fabrication](fabrication/fabrication.md)
