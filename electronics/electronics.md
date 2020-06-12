@@ -4,6 +4,7 @@
 - [KiCad STM32 Hardware Design and JLCPCB Assembly](https://www.youtube.com/watch?v=t5phi3nT8OU)
 - [KiCad STM32 + RF + USB Hardware Design](https://www.youtube.com/watch?v=14_jh3nLSsU)
 - [similar to this collection](https://github.com/benblazak/ergodox-firmware/blob/master/references.md)
+- [Contextual Electronics](https://www.youtube.com/channel/UCkJRycUz2CylxpiP-zMePow)
 
 ## Power circuit
 

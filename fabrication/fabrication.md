@@ -22,3 +22,7 @@ Not having to deal with stripping the insulation speeds up wiring.
 
 Often in solder.
 Shows the effects of varying amounts of flux: https://www.youtube.com/watch?v=tfIwHuGzUEk
+
+## PCBs
+Creating pixel art logos: http://img2mod.wayneandlayne.com/
+https://www.youtube.com/channel/UCkJRycUz2CylxpiP-zMePow
