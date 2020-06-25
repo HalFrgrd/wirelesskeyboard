@@ -5,6 +5,7 @@
 - [KiCad STM32 + RF + USB Hardware Design](https://www.youtube.com/watch?v=14_jh3nLSsU)
 - [similar to this collection](https://github.com/benblazak/ergodox-firmware/blob/master/references.md)
 - [Contextual Electronics](https://www.youtube.com/channel/UCkJRycUz2CylxpiP-zMePow)
+- https://www.youtube.com/watch?v=VfkSzvXPYak
 
 ## Power circuit
 
@@ -184,6 +185,7 @@ Why are there 22 Ohm resistors on the usb data lines:
 https://www.eevblog.com/forum/projects/why-usb-data-series-resistors/
 These do not appear in the nrfMicro.
 
+## OpAmps
 
 
 ## Thingies

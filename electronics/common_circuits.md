@@ -1,5 +1,5 @@
 ## LEDs
-Single LED:
+#### Single LED:
 
 ![](https://www.electronicshub.org/wp-content/uploads/2017/10/Simple-LED-Circuits-Circuit-1.jpg)
 With no resistor, the LED would burn out quickly.
@@ -7,6 +7,18 @@ With no resistor, the LED would burn out quickly.
 Calculating the resistor value: $R = \frac{V_{source}-V_{LED}}{I_{LED}}$.
 
 [Read more](https://www.electronicshub.org/simple-led-circuits/)
+
+
+### RGB LED strips
+Either you have a strip of LEDs that are all connected up. i.e. 3 different ground circuits and one common voltage or you have addressable LEDs.
+
+#### Addressable LEDs
+Each LED has a tiny microcontroller allowing each one to light up with a unique color and brightness.
+Three lines: positive voltage, ground, and data.
+Each LED reads the data and passes it onto the next one.
+
+[Read more](http://www.thesmarthomehookup.com/beginners-guide-to-individually-addressable-rgb-led-strips/)
+
 
 ## Joysticks
 - 4 / 5 lines
@@ -20,6 +32,10 @@ Calculating the resistor value: $R = \frac{V_{source}-V_{LED}}{I_{LED}}$.
 The encoder generates two offset square wave outputs. Measuring both of them can tell us the direction and speed we are rotating.
 
 Encoders rotate around continuously but potentiometers only rotate one revolution.
+
+**Important:** 
+Two 10k pull up resistors might be needed to stop the two direction pins from floating. 
+I needed it. This isn't shown on many wiring diagrams.
 
 [Read more](https://www.electroschematics.com/rotary-encoder-arduino/)
 

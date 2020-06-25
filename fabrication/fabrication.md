@@ -26,3 +26,15 @@ Shows the effects of varying amounts of flux: https://www.youtube.com/watch?v=tf
 ## PCBs
 Creating pixel art logos: http://img2mod.wayneandlayne.com/
 https://www.youtube.com/channel/UCkJRycUz2CylxpiP-zMePow
+
+### To solder underside pads:
+Create pads at the top and have vias in the pads. 
+Put 0.1mm wire through the vias. 
+Maybe this will resolve some issues of 
+
+https://www.youtube.com/watch?v=D3PTpaB4kro
+
+https://www.youtube.com/watch?v=GWWIA8P2-eU
+
+
+https://www.insightsip.com/fichiers_insightsip/pdf/ble/ISP1807/isp_ble_DS1807.pdf

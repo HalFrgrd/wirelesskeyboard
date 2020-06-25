@@ -176,6 +176,8 @@
 - Ortholinear
 - Kingly Keys has other builds
 
+Similar: https://geekhack.org/index.php?topic=78277.0
+
 ### [Bamboo](https://www.reddit.com/r/mechmarket/comments/dndias/ic_bamboo_a_40_like_no_other_aurora_display_choc/)
 - Nonsplit
 - Ortholinear

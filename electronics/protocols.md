@@ -63,8 +63,15 @@ ST-Link V2 and BluePill are such programmers.
 
 You can use the SWD and SWC pins as general gpio, but you won't be able to flash to the device using them. So a bad idea.
 
+https://devzone.nordicsemi.com/f/nordic-q-a/42824/flashing-nrf5832-using-only-st-link-v2-and-openocd
+
 ## JTAG
 Provides debugging with 5 pins.
+
+## OpenOCD (Open On Chip Debugger)
+Provides debugging, programming for 
+http://openocd.org/doc/html/About.html
+
 
 ## Bootloader
 
@@ -75,3 +82,42 @@ Microcontrollers start with nothing in their memory so external programming is t
 [Read more](https://electronics.stackexchange.com/questions/27486/what-is-a-boot-loader-and-how-would-i-develop-one)
 
 A DFU (Device Firmware Update) bootloader is one that supports updating the firmware. On startup, it checks if there is a valid program and tries to run it. Otherwise, it will enter DFU mode.
+
+
+## Microcontrollers and Architectures
+
+### AVR by Atmel / Microchip
+Is a family of microcontrollers developed by Atmel. Atmel was acquired by Microchip Technology in 2016.
+These are modified Harvard architecture 8-bit RISC single-chip microcontrollers.
+Atmel does make ARM based boards.
+
+Atmel also makes 32-bit microcontrollers using the AVR32 architecture which is completely different toe the 8-bit AVR architecture.
+They are designed to compete with ARM-based processors. But Atmel focuses mainly on ARM Cortex-M and Cortex-A cores.
+
+Atmel has a license for the ARM architecture and also manufactures boards using this architecture.
+
+Examples are: ATMEGA32 , ATMEGA16. 
+ATMEGA32U4 is what the Pro Micro uses.
+
+http://www.avrbeginners.net/
+
+### ARM (Acorn / Advanced RISC Machine )
+
+#### ARM Cortex-M
+A group of 32-bit RISC ARM processor cores licensed by Arm Holdings.
+Arm doesn't manufacture them, only licenses the architecture to others.
+
+The nRF52840 is built around the Cortex-M4.
+
+### Arduino
+Is an open-source platform for electronics projects. 
+Is a series of open-source hardware AVR based boards and a software package.
+This provides a standard form factor.
+
+A benefit of Arduino is that you can flash boards just using a USB cable.
+
+### Xtensa by Tensilica
+Used in ESP32
+
+### STM32 by 
+Family of 32-bit microcontrollers based around the 32-bit ARM processor core.
