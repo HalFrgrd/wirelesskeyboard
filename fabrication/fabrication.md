@@ -27,6 +27,11 @@ Shows the effects of varying amounts of flux: https://www.youtube.com/watch?v=tf
 Creating pixel art logos: http://img2mod.wayneandlayne.com/
 https://www.youtube.com/channel/UCkJRycUz2CylxpiP-zMePow
 
+Some good guides:
+- https://github.com/ruiqimao/keyboard-pcb-guide
+- https://github.com/coarse/Modern-Keyboard-PCB-Guide
+
+
 ### To solder underside pads:
 Create pads at the top and have vias in the pads. 
 Put 0.1mm wire through the vias. 

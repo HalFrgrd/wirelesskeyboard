@@ -42,7 +42,9 @@ I needed it. This isn't shown on many wiring diagrams.
 When wiring in a keyboard circuit, treat it like a normal switch but have two extra pins:
 ![](rotary_encoder_keyboard.png)
 
-[Using multiple encoders in a keyboard:](https://www.youtube.com/watch?v=DyHxccSvsPs) The two pins on every encoder for the two square wave outputs (A and B) are wired to the same two pins on the controller. So we only need to use two pins on the controller for any number of encoders. The C lines are wired through a diode to the rows. A matrix scan can then measure the values for each individual encoder.
+[Using multiple encoders in a keyboard:](https://www.youtube.com/watch?v=DyHxccSvsPs) The two pins on every encoder for the two square wave outputs (A and B) are wired to the same two pins on the controller. 
+So we only need to use two pins on the controller for any number of encoders. 
+The C lines are wired through a diode to the rows. A matrix scan can then measure the values for each individual encoder.
 
 ![](multiple_rotary_encoders.png)
 
@@ -77,5 +79,6 @@ In the nrfMicro:
 - The capacitor present in the datasheet is found in the power filtering circuit
 
 ## Power switching with external ground
-I think some power hungry components like LEDs can be turned off by toggling pin 1.09. This makes there be no voltage between VCC and EXT_GND. Why would you want to short solder jump S8? connects EXT_GND to VCC permanently?
+I think some power hungry components like LEDs can be turned off by toggling pin 1.09. 
+This makes there be no voltage difference between VCC and EXT_GND. 
 
