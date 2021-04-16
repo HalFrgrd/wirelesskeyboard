@@ -25,3 +25,6 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
+
+60_case_keyboard/gerbers/
+*.zip
