@@ -1,3 +1,9 @@
+---
+layout: default
+title: Fabrication resources
+parent: Wireless keyboard project
+---
+
 # Fabrication resources
 
 ## [Creating Sparkfun Artemis](https://www.sparkfun.com/news/3122)
