@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Fabrication resources
+title: Fabrication notes
 parent: Wireless keyboard project
 ---
 
