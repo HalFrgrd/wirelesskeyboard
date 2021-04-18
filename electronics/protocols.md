@@ -1,3 +1,11 @@
+---
+layout: default
+title: Protocols and concepts
+parent: Wireless keyboard project
+---
+
+
+
 # Protocols and concepts
 
 

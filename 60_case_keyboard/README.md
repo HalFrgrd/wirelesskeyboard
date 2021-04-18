@@ -1,3 +1,10 @@
+---
+layout: default
+title: Unnamed keyboard
+parent: Wireless keyboard project
+---
+
+
 # Unnamed keyboard
 A PCB to fit into the 60% keyboard case I have.
 - 35%
