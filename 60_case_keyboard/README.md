@@ -20,22 +20,22 @@ https://github.com/daprice/keyswitches.pretty
 These are some dimensions of [the specific case I used.](https://www.aliexpress.com/item/32921993410.html?pid=808_0000_0101&spm=a2g0n.search-amp.list.32921993410&aff_trace_key=2b17650114d94b82bf89c85dab72a30e-1550938224177-03600-UneMJZVf&aff_platform=msite&m_page_id=6878amp-RE3tNnzZA5LCyChfdei61Q1552019685186)
 
 
-Case to standoff: 4.6mm
-Indented case to standoff: 7.0mm
-LCD connector height: 1.8mm
-Distance from edge of case to LCD connector: 50.0mm
-Useable indentation width: 42.1mm
-Useable indentation length: 145.0mm
-Useable indentation length with drop through rotary encoder: 109.0mm
-Useable case width: 90.0mm
+- Case to standoff: 4.6mm
+- Indented case to standoff: 7.0mm
+- LCD connector height: 1.8mm
+- Distance from edge of case to LCD connector: 50.0mm
+- Useable indentation width: 42.1mm
+- Useable indentation length: 145.0mm
+- Useable indentation length with drop through rotary encoder: 109.0mm
+- Useable case width: 90.0mm
 
 ### Flashing
 These are based on the instructions found in [joric's nrfmicro](https://github.com/joric/nrfmicro/wiki/Bootloader).
 
 #### ST-Link V2 converted to Black Magic Probe
-I used two ST-Link V2's and converted one into a [Black Magic Probe](https://github.com/blacksphere/blackmagic) using the instructions found [here](https://web.archive.org/web/20210121183153/http://blog.linuxbits.io/2016/02/15/cheap-chinese-st-link-v-2-programmer-converted-to-black-magic-probe-debugger/).
+I used two ST-Link/V2 clone's and converted one into a [Black Magic Probe](https://github.com/blacksphere/blackmagic) using the instructions found [here](https://web.archive.org/web/20210121183153/http://blog.linuxbits.io/2016/02/15/cheap-chinese-st-link-v-2-programmer-converted-to-black-magic-probe-debugger/).
 My notes on the conversion process are [here](https://github.com/HalFrgrd/halfrgrd.github.io/blob/master/black_magic_probe_windows_mingw64.md).
-I would recommend this route as the two ST-Link V2's will cost less than $5.
+I would recommend this route as the two ST-Link V2 clone's will cost less than $5.
 
 #### Flashing notes
 [GDB (GNU Project Debugger)](https://www.gnu.org/software/gdb/) is used to control the Black Magic Probe.

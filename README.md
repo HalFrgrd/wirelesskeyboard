@@ -1,3 +1,9 @@
+---
+layout: default
+title: Wireless keyboard project
+has_children: true
+---
+
 ## Wireless keyboard
 
 Resources for making a wireless keyboard.
