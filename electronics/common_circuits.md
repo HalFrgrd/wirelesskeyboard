@@ -1,3 +1,10 @@
+---
+layout: default
+title: Common circuits
+parent: Wireless keyboard project
+---
+
+
 ## LEDs
 #### Single LED:
 

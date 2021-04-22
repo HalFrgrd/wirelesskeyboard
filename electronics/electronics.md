@@ -1,3 +1,10 @@
+---
+layout: default
+title: Electronics notes
+parent: Wireless keyboard project
+---
+
+
 ## Good resources
 - https://www.tutorialspoint.com/basic_electronics/basic_electronics_materials.htm: Useful theory at the start.
 - Sparkfun tutorials

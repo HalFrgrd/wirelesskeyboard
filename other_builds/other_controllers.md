@@ -1,3 +1,10 @@
+---
+layout: default
+title: Microcontrollers
+parent: Wireless keyboard project
+---
+
+
 ### Raspberry Pi
 https://geekhack.org/index.php?topic=99682.0
 https://www.youtube.com/watch?v=bqLId-HuUNc

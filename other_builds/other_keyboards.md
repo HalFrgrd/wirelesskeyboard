@@ -1,3 +1,10 @@
+---
+layout: default
+title: Other keyboards
+parent: Wireless keyboard project
+---
+
+
 ### [Mitosis by Reverse_Bias](https://imgur.com/a/mwTFj#Bt8Sr4K?)
 - Split
 - Wireless
