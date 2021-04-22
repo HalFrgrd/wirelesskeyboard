@@ -28,3 +28,7 @@ fp-info-cache
 
 60_case_keyboard/gerbers/
 *.zip
+
+60_case_keyboard/firmware/adafruit-circuitpython-bundle-6.x-mpy-20210420/
+60_case_keyboard/firmware/circuitpython
+60_case_keyboard/firmware/SHARP_BadApple

@@ -92,3 +92,26 @@ Loading section .sec6, size 0x8 lma 0x10001014
 Start address 0x0, load size 182712
 Truncated register 34 in remote 'g' packet
 ```
+
+
+arm-none-eabi-gdb.exe --batch -ex "target extended-remote \\.\COM5" -ex "mon swdp_scan" -ex "att 1" -ex "mon erase_mass"
+
+arm-none-eabi-gdb.exe --batch -ex "target extended-remote \\.\COM5" -ex "mon swdp_scan" -ex "file C:/Users/hal/Documents/Github/wirelesskeyboard/60_case_keyboard/bootloader.hex" -ex "att 1" -ex "mon erase" -ex load
+
+Github:
+
+CIRCUITPY still shows up. I can change code.py 
+
+rows x cols grid
+2x2: stable
+2x5: stable
+2x10: hangs
+
+2x6 with 0.01 secs sleep: stable
+2x6 with 0.001 secs sleep: hangs
+2x2 with 0.001 secs sleep: hangs
+
+**Solution:** when I commented out the sleep line, it works fine!
+It seems to get caught in sleep which would make sense.
+
+This is similar: https://github.com/adafruit/circuitpython/issues/3829
