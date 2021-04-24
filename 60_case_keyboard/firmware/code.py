@@ -42,6 +42,11 @@ def encoder_update():
         if not encoder_switch_last_position:
             keyboard_consumer_control.send(ConsumerControlCode.MUTE)
 
+# buzzer
+# buzzer_pin = board.P0_03
+# import simpleio
+# simpleio.tone(buzzer_pin, 300,duration=0.1)
+
 
 # display imports
 import displayio
@@ -62,8 +67,6 @@ framebuffer = sharpdisplay.SharpMemoryFramebuffer(bus, chip_select_pin, 400, 240
 display_on_in = DigitalInOut(board.P0_30)
 display_on_in.direction = Direction.OUTPUT
 display_on_in.value = True
-
-
 
 display = framebufferio.FramebufferDisplay(framebuffer)
 
@@ -92,23 +95,30 @@ num_keys = num_cols * num_rows
 # The keyboard object!
 # time.sleep(0.5)  # Sleep for a bit to avoid a race condition on some systems
 
+kc_members = [attr for attr in dir(KC) if not callable(getattr(KC, attr)) and not attr.startswith("__")]
+
+def get_key_name(kc_value):
+    for kc in kc_members:
+        if kc_value == getattr(KC,kc):
+            return kc
+    return "NULL"
+
 keyboard = Keyboard(usb_hid.devices)
 keyboard_layout = KeyboardLayoutUS(keyboard)
 keyboard_consumer_control = ConsumerControl(usb_hid.devices)
+KC.NULL = 0
 
 special_keys_that_need_checks = []
 
 # in nanoseconds or 10s of nanoseconds?
-TAPPING_TERM = 280*1e4
+TAPPING_TERM = 400*1e4
 
 class KeySendBuffer():
-    # could try and override the adafruit keyboard class
-    # have it swap first instance. no need to keep track of position in buffer.
-    # the freeze should affect both press and release
+    """Temporary buffer to hold keypresses so that we can freeze all sends."""
     def __init__(self, send_all_func) -> None:
         self.buffer = []
         self.index = 0
-        self.frozen = 0 # a counter to allow multiple keys to express freeze on buffer
+        self.frozen = 0 # a counter to allow multiple keys to freeze buffer
         self.send_all_func = send_all_func
 
     def put(self,key_code):
@@ -132,7 +142,8 @@ class KeySendBuffer():
 
     def send_all(self):
         if self.frozen == 0 and self.index != 0:
-            print("Cycle: ", cycle_counter, "Sending ", len(self.buffer), " keys by", self.send_all_func.__name__)
+            kc_names = [get_key_name(x) for x in self.buffer]
+            print("Cycle: ", cycle_counter, "Sending ", kc_names, " keys by", self.send_all_func.__name__)
             try:
                 self.send_all_func(*self.buffer)
             except ValueError:
@@ -143,11 +154,15 @@ class KeySendBuffer():
 depress_buffer = KeySendBuffer(keyboard.press)
 release_buffer = KeySendBuffer(keyboard.release)
 
+normal_key_pressed_recently_flag = False
+
 class NormalKey():
     def __init__(self,tap_key_code):
         self.tap_key_code = tap_key_code
 
     def depress(self):
+        global normal_key_pressed_recently_flag
+        normal_key_pressed_recently_flag = True
         depress_buffer.put(self.tap_key_code)
     
     def release(self):
@@ -164,6 +179,8 @@ class TapHoldKey():
     def depress(self):
         self.depress_time_ns = time.monotonic_ns()
         self.state = "tap_key"
+        global normal_key_pressed_recently_flag
+        normal_key_pressed_recently_flag = False
 
         # print("depressing tap key")
         depress_buffer.freeze()
@@ -173,50 +190,50 @@ class TapHoldKey():
         special_keys_that_need_checks.append(self)
     
     def switch_and_unfreeze(self):
-        # print("swapping hold key in for tap key")
+        print("Cycle: ", cycle_counter, "Switching ", get_key_name(self.hold_key_code), "in for", get_key_name(self.tap_key_code))
         depress_buffer.replace_keycode(self.hold_key_code,self.depress_buffer_pos)
         depress_buffer.unfreeze()
         release_buffer.unfreeze()
 
-    def release_helper_hold(self):
+    def on_hold_code_release(self):
         # here so that it can be overwritten
         release_buffer.put(self.hold_key_code)
 
     def release(self):
-
         if self in special_keys_that_need_checks:
             special_keys_that_need_checks.remove(self)
-
-        if time.monotonic_ns() - self.depress_time_ns < TAPPING_TERM:
-            # print("sending tap key code", self.tap_key_code )
-            release_buffer.put(self.tap_key_code)
             depress_buffer.unfreeze()
             release_buffer.unfreeze()
+        
+        if self.state == "tap_key":
+            release_buffer.put(self.tap_key_code)
+        elif self.state == "hold_key":
+            self.on_hold_code_release()
         else:
-            # print("releasing hold key code", self.hold_key_code)
-            if self.state == "tap_key":
-                self.switch_and_unfreeze()
-
-            self.release_helper_hold()
+            raise NameError("self.state is not what's expected")
     
     def check(self): # could have this trigger an event to send buffers, but what about multiple keys
         """ Return true if key no longer needs checking"""
-        if  time.monotonic_ns() - self.depress_time_ns > TAPPING_TERM:
-            # print("pressing hold key code", self.hold_key_code)
+        global normal_key_pressed_recently_flag
+
+        time_diff = time.monotonic_ns() - self.depress_time_ns
+        if  time_diff > TAPPING_TERM: # or number_new_depresses > 0:
             self.state = "hold_key"
             self.switch_and_unfreeze()
             return True
+        elif  normal_key_pressed_recently_flag: # and time_diff < 200: # if another key is pressed inside of the tapping term, we stay in the tap key state.
+            print("Cycle: ", cycle_counter, "Going ahead with ", get_key_name(self.tap_key_code), "instead of", get_key_name(self.hold_key_code))   
+            normal_key_pressed_recently_flag = False
+            depress_buffer.unfreeze()
+            release_buffer.unfreeze()
+            return True
         return False
-
-KC_NULL = 0
-
 
 layer_stack = ["base"]
 
-
 class TapHoldLayer(TapHoldKey):
     def __init__(self, tap_key_code, layer_name):
-        super().__init__(tap_key_code, KC_NULL)
+        super().__init__(tap_key_code, KC.NULL)
         self.layer_name = layer_name
     
     def switch_and_unfreeze(self):
@@ -224,85 +241,87 @@ class TapHoldLayer(TapHoldKey):
         layer_stack.append(self.layer_name)
         return super().switch_and_unfreeze()
 
-    def release_helper_hold(self):
+    def on_hold_code_release(self):
         global layer_stack
         layer_stack = layer_stack[:self.old_layer_index]
-        return super().release_helper_hold()
+        return super().on_hold_code_release()
 
-# class TapDance:
-#     def __init__(self) -> None:
-#         pass
 
 import supervisor
 class ReloadKey:
-    def __init__(self) -> None:
-        pass
-
     def depress(self):
         supervisor.reload()
-    
     def release(self):
         print("shouldn't be seeing this")
+
+class ModdedKey:
+    def __init__(self, tap_key_code, mod_key_code) -> None:
+        self.tap_key_code = tap_key_code
+        self.mod_key_code = mod_key_code
+    
+    def depress(self):
+        global normal_key_pressed_recently_flag
+        normal_key_pressed_recently_flag = True
+        depress_buffer.put(self.mod_key_code)
+        depress_buffer.put(self.tap_key_code)
+    
+    def release(self):
+        release_buffer.put(self.tap_key_code)
+        release_buffer.put(self.mod_key_code)
+
+class CTRL(ModdedKey):
+    def __init__(self, tap_key_code) -> None:
+        super().__init__(tap_key_code, KC.CONTROL)  
+
+class SHFT(ModdedKey):
+    def __init__(self, tap_key_code) -> None:
+        super().__init__(tap_key_code, KC.SHIFT)    
 
 # aliases
 NK = NormalKey
 TH = TapHoldKey
 TL = TapHoldLayer
+MK = ModdedKey
 
 layout = {
     "base": [
     [NK(KC.Q),           NK(KC.W),NK(KC.E),    NK(KC.R),    NK(KC.T),NK(KC.Y),NK(KC.U),        NK(KC.I),    NK(KC.O),     NK(KC.P)],
-    [TH(KC.A,KC.ALT),TH(KC.S,KC.GUI),TH(KC.D,KC.SHIFT),TH(KC.F,KC.CONTROL),NK(KC.G),NK(KC.H),TH(KC.J,KC.CONTROL), TH(KC.K,KC.RIGHT_SHIFT),TH(KC.L,KC.RIGHT_GUI),TH(KC.ENTER, KC.RIGHT_ALT)],
+    [NK(KC.A),           NK(KC.S),TH(KC.D,KC.SHIFT),TH(KC.F,KC.CONTROL),NK(KC.G),NK(KC.H),TH(KC.J,KC.CONTROL), TH(KC.K,KC.RIGHT_SHIFT),NK(KC.L),NK(KC.ENTER)],
     [TH(KC.Z,KC.CONTROL),NK(KC.X),NK(KC.C),    NK(KC.V),    NK(KC.B),NK(KC.N),NK(KC.M),        NK(KC.COMMA),NK(KC.PERIOD),NK(KC.FORWARD_SLASH) ],
-    [NK(KC_NULL), NK(KC_NULL),TL(KC.TAB,"navigation"),TL(KC.SPACE,"numbers"),NK(KC.A),ReloadKey(),NK(KC.BACKSPACE),NK(KC.A),    NK(KC_NULL),     NK(KC_NULL)]
+    [NK(KC.NULL),       NK(KC.NULL),TL(KC.TAB,"navigation"),TL(KC.SPACE,"numbers"),NK(KC.A),ReloadKey(),NK(KC.BACKSPACE),TL(KC.ESCAPE,"symbols"),    NK(KC.NULL),     NK(KC.NULL)]
     ],
 
     "numbers": [
     [NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.SEVEN),      NK(KC.EIGHT),      NK(KC.NINE),      NK(KC.A)],
-    [NK(KC.C),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.ZERO),      NK(KC.FOUR),      NK(KC.FIVE),      NK(KC.SIX),      NK(KC.A)],
+    [NK(KC.ALT),    NK(KC.GUI),    NK(KC.SHIFT),  NK(KC.CONTROL),      NK(KC.A),      NK(KC.ZERO),      NK(KC.FOUR),      NK(KC.FIVE),      NK(KC.SIX),      NK(KC.A)],
     [NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.ONE),      NK(KC.TWO),      NK(KC.THREE),      NK(KC.A)],
-    [NK(KC.A),      NK(KC.A),      None,          None,          NK(KC.A),      None,      None,      NK(KC.A),      NK(KC.A),      NK(KC.A)],
+    [NK(KC.A),      NK(KC.A),      None,          None,          None,      None,      None,      None,      None,      None],
     ],
 
     "navigation": [
-    [NK(KC.ESCAPE), NK(KC.A),      NK(KC.A),  NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.PAGE_UP),   NK(KC.UP_ARROW),      NK(KC.PAGE_DOWN),      NK(KC.A)],
-    [None,          None,          None,      None,          NK(KC.A),      NK(KC.HOME),   NK(KC.LEFT_ARROW),NK(KC.DOWN_ARROW),      NK(KC.RIGHT_ARROW),      NK(KC.END)],
-    [NK(KC.A),      NK(KC.A),      NK(KC.A),  NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.A),         NK(KC.A),      NK(KC.A),      NK(KC.A)],
-    [NK(KC.A),      NK(KC.A),      None,      None,          NK(KC.A),      NK(KC.A),      NK(KC.A),         NK(KC.A),      NK(KC.A),      NK(KC.A)],
+    [NK(KC.ESCAPE), NK(KC.A),      NK(KC.A),  NK(KC.A),      NK(KC.A),      NK(KC.A),      NK(KC.HOME), NK(KC.PAGE_DOWN),   NK(KC.PAGE_UP),      NK(KC.END),      NK(KC.A)],
+    [NK(KC.ALT),    NK(KC.GUI),    NK(KC.SHIFT), NK(KC.CONTROL),NK(KC.A),      NK(KC.TAB),   NK(KC.LEFT_ARROW),NK(KC.DOWN_ARROW),      NK(KC.UP_ARROW),      NK(KC.RIGHT_ARROW)],
+    [CTRL(KC.Z),    CTRL(KC.X),    CTRL(KC.C),  CTRL(KC.V),      NK(KC.A),      NK(KC.A),     CTRL(KC.LEFT_ARROW), CTRL(KC.DOWN_ARROW),CTRL(KC.UP_ARROW),   CTRL(KC.RIGHT_ARROW)],
+    [NK(KC.A),      NK(KC.A),      None,      None,          NK(KC.A),      NK(KC.A),      None,         NK(KC.DELETE),      NK(KC.A),      NK(KC.A)],
+    ],
+
+    "symbols": [
+    [None,          None,           SHFT(KC.LEFT_BRACKET),     SHFT(KC.RIGHT_BRACKET),           None,           SHFT(KC.MINUS),        SHFT(KC.EQUALS),    SHFT(KC.NINE),  SHFT(KC.ZERO),            None],
+    [SHFT(KC.ONE),  SHFT(KC.TWO),   SHFT(KC.THREE), SHFT(KC.FOUR),  SHFT(KC.FIVE),  SHFT(KC.SIX),   SHFT(KC.SEVEN), SHFT(KC.EIGHT), NK(KC.SEMICOLON),NK(KC.QUOTE)],
+    [None,          None,           NK(KC.LEFT_BRACKET),           NK(KC.RIGHT_BRACKET),           None,           NK(KC.MINUS),           NK(KC.EQUALS),           NK(KC.COMMA),   NK(KC.PERIOD),   NK(KC.FORWARD_SLASH)],
+    [None,          None,           None,           None,           None,           None,           None,           None,           None,           None],
     ]
 
 }
 
 
 
+
 mask = 0
-# last_mask = 0 no need, just use mask
 key_mask = 0
 key_index = 0
-
-
-class ByteArrayQueue:
-    """Simple fixed length queue implementation"""
-    def __init__(self, length):
-        self.length = length
-        self.q = bytearray(length)
-        self.head = 0
-        self.tail = 0
-        self.size = 0
-    
-    def enqueue(self, x):
-        self.q[self.tail] = x
-        self.tail = (self.tail + 1) % self.length
-        self.size += 1
-    
-    def dequeue(self):
-        self.size -= 1
-        self.head = (self.head + 1) % self.length
-        return self.q[(self.head -1 + self.length) % self.length]
-    
-
-depress_events = ByteArrayQueue(num_keys)
-release_events = ByteArrayQueue(num_keys)
+t0 = [0] * num_keys  # last time it was pressed
+t1 = [0] * num_keys  # last time it was released
 
 
 # we need to keep track of which layer a key was depressed on.
@@ -332,16 +351,37 @@ def get_key_that_is_being_released(key_index):
 
     return layout[key_layer][r_index][c_index]
 
+class ByteArrayQueue:
+    """Simple fixed length queue implementation"""
+    def __init__(self, length):
+        self.length = length
+        self.q = bytearray(length)
+        self.head = 0
+        self.tail = 0
+        self.size = 0
+    
+    def enqueue(self, x):
+        self.q[self.tail] = x
+        self.tail = (self.tail + 1) % self.length
+        self.size += 1
+    
+    def dequeue(self):
+        self.size -= 1
+        self.head = (self.head + 1) % self.length
+        return self.q[(self.head -1 + self.length) % self.length]
+    
+depress_events = ByteArrayQueue(num_keys)
+release_events = ByteArrayQueue(num_keys)
 
 def handle_depress_events():
     num_events = depress_events.size
-    for i in range(num_events):
+    for _ in range(num_events):
         key_index = depress_events.dequeue()
         get_key_that_is_being_depressed(key_index).depress()
 
 def handle_release_events():
     num_events = release_events.size
-    for i in range(num_events):
+    for _ in range(num_events):
         key_index = release_events.dequeue()
         get_key_that_is_being_released(key_index).release()
 
@@ -355,13 +395,14 @@ def handle_special_keys_that_need_checking():
 
 cycles_to_average = 1000
 sum_cycle_times = 0
-start_time = 0
+start_time = time.monotonic_ns()
 cycle_counter = 0
-# start_time = time.monotonic_ns()
 mask_changed = False
 
 my_label.text = "Main loop!"
 print("starting poll")
+
+debounce_time = 1000000
 
 # Main loop
 while True:
@@ -373,9 +414,9 @@ while True:
         my_label.y += 1
         my_label.y %= 200
 
-    
 
     key_index = -1
+    t = time.monotonic_ns()
 
     for col in cols:
         col.value = True
@@ -385,12 +426,23 @@ while True:
             key_mask = 1 << key_index
 
             if row.value:
-                # having these on seperate lines avoids having to do debounce i think
                 if not (mask & key_mask): # first time this key is depressed
+                    if t - t1[key_index] < debounce_time: # was just recently released
+                        print("debounce press")
+                        continue
+
+                    t0[key_index] = t
+
                     mask |= key_mask
                     depress_events.enqueue(key_index)
 
             elif (mask & key_mask): # first time key is released
+                if t - t0[key_index] < debounce_time: # was too recently pushed down.
+                    print("debounce release")
+                    continue
+                    
+                t1[key_index] = t
+
                 mask &= ~key_mask #set bit to zero
                 release_events.enqueue(key_index)
             
